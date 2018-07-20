@@ -13,3 +13,23 @@
 // limitations under the License.
 
 console.log("Running Click Events Script");
+const clickedRedBox = document.querySelector('#box1')
+clickedRedBox.addEventListener('click', changeColor(clickedRedBox))
+
+const clickedPinkBox = document.querySelector('#box2')
+clickedPinkBox.addEventListener('click', changeColor(clickedPinkBox))
+
+const clickedOrangeBox = document.querySelector('#box3')
+clickedOrangeBox.addEventListener('click', changeColor(clickedOrangeBox))
+
+function changeColor(box)
+{
+  return () => {
+    const boxOne = document.querySelector('#box1')
+    const boxTwo = document.querySelector('#box2')
+    const boxThree = document.querySelector('#box3')
+    boxOne.style.backgroundColor = window.getComputedStyle(box).backgroundColor
+    boxTwo.style.backgroundColor = window.getComputedStyle(box).backgroundColor
+    boxThree.style.backgroundColor = window.getComputedStyle(box).backgroundColor
+  }
+}

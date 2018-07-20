@@ -2,6 +2,9 @@ console.log('Hello World!');
 const name = 'Charlie';
 console.log(`Hello ${name}!`);
 const age = 16;
+
+
+
 console.log('You are '+age+' years old!');
 if (age>=15)
 {
@@ -10,3 +13,15 @@ if (age>=15)
 {
   console.log("You will have to wait until you're 15.");
 }
+
+function greet(name="Bob")
+{
+  console.log(`Hello ${name}`);
+}
+
+function makeGreetingMessage(name="Bob")
+{
+  return(`Hello ${name}`);
+}
+
+greet("Joebob"); //function
