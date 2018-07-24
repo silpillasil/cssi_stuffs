@@ -23,4 +23,13 @@ class BankAccount(object):
     def __str__(self):
         print('Label: {l} \nBalance: {b}'.format(
         l = self.label, b = self.balance))
-    
+    def withdraw(self, amount):
+        if (amount<=balance):
+            balance-=amount
+        else:
+            print('Error: not enough money to withdraw')
+    def deposit(self, amount):
+        if (amount>=0):
+            balance+=amount
+        else:
+            print('Error: cannot deposit negative amount')
