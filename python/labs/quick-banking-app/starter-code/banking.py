@@ -17,4 +17,10 @@
 # Replace "pass" with your code
 
 class BankAccount(object):
-    pass
+    def __init__(self, label, balance):
+        self.label = label
+        self.balance = balance
+    def __str__(self):
+        print('Label: {l} \nBalance: {b}'.format(
+        l = self.label, b = self.balance))
+    

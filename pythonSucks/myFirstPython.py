@@ -20,16 +20,17 @@ while (x < 5):
     # comment
 
 """
+if __name__ == '__main__':
 
-for thing in "hello":
-    print(thing)
+    for thing in "hello":
+        print(thing)
 
-my_list = [1,2,3,4,5]
-for thing in my_list:
-    print(thing)
+    my_list = [1,2,3,4,5]
+    for thing in my_list:
+        print(thing)
 
-def my_function():
-    print("Hello lunchtime")
+    def my_function():
+        print("Hello lunchtime")
 
 # if num % 3 print fizz
 # if num % 5 print buzz
