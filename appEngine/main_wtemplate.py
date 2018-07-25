@@ -11,6 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""
+This is the same meme code, but using templates. There are comments describing
+what I did in each step so that I can know what's going on months down the
+line and also maybe to vent my frustration. Because templates fucking suck.
+"""
 
 import webapp2
 from operator import xor
@@ -18,21 +23,14 @@ from google.appengine.api import urlfetch
 import json
 import urllib
 import random
-import logging
+import logging #logs stuff to the command line
 import jinja2
 
 
 template_loader = jinja2.FileSystemLoader(searchpath="./")
 template_env = jinja2.Environment(loader=template_loader)
-# TEMPLATE_FILE = "template.html"
-# template = templateEnv.get_template(TEMPLATE_FILE)
-# outputText = template.render()  # this is where to put args to the template renderer
 
-# print(outputText)
-
-
-#dict = {'cat': 'https://www.petmd.com/sites/default/files/what-does-it-mean-when-cat-wags-tail.jpg'}
-
+""" random inactive code """
 # class MainPage(webapp2.RequestHandler):
 #     def get(self):
 #         number = self.request.get('number')
@@ -45,41 +43,40 @@ template_env = jinja2.Environment(loader=template_loader)
 #         self.response.headers['Content-Type'] = 'text/plain'
 #         self.response.write('saved')
 
+""" let's get down to business """
+
 class Memes(webapp2.RequestHandler):
-    def get(self):
+    def post(self): #changed from a get to a post to communicate w html file
         url = 'https://api.imgflip.com/get_memes'
         self.response.headers['Content-Type'] = 'text/html'
         random_captions = ['dank mems', 'yoooo', 'flusdhfusdfsyyds', 'blub blub']
         x = random.choice(random_captions)
-        #template = template_env.get_template('templates/meme_result.html')
+        template = template_env.get_template('templates/meme_result.html') #imports template
 
         try:
             result = urlfetch.fetch(url)
-            if result.status_code == 200:
-                # self.response.write("McIf")
-                #self.response.write(result.content)
+            if result.status_code == 200: #200 means good job! you didn't fuck up
                 json_dict = json.loads(result.content)
-                # picture_url = json_dict['data']['memes'][0]['url']
-                # picture_id = json_dict['data']['memes'][0]['id']
                 random_meme = random.choice(json_dict['data']['memes'])['id']
-
-                # self.response.write('<img src="{pic}"/>'.format(pic=picture_url))
             else:
-                #self.response.write("McElse")
                 self.response.status_code = result.status_code
 
         except urlfetch.Error:
-            #self.response.write("McExcept")
             logging.exception('Caught exception fetching url')
+
+#""" this stuff the api just told you to do vvv """
 
         caption_url = 'https://api.imgflip.com/caption_image'
         caption_dict = {'template_id': random_meme,
                         'username': 'asil737',
                         'password': 'ponkponk',
-                        'text0': random.choice(random_captions),
-                        'text1': random.choice(random_captions),
+                        'text0': self.request.get('user-first-ln'),
+                        'text1': self.request.get('user-second-ln'),
                         # 'text2': 'mem'
                         }
+# """ the text0 and text1 are replaced so that you're getting whatever you
+# entered into the form on the first page. That you do by self.request.get
+# to the NAME of the object or whatever. """
 
         #result = urlfetch.post(caption_url, data=caption_dict)
         result = urlfetch.fetch(
@@ -88,10 +85,14 @@ class Memes(webapp2.RequestHandler):
                 method=urlfetch.POST,
                 #headers=headers
                 )
-        new_meme_dict = json.loads(result.content)
+        new_meme_dict = json.loads(result.content) #this is changing a string to dict
+
         picture_url = new_meme_dict['data']['url']
-        self.response.write('<img src="{pic}"/>'.format(pic =picture_url))
-        # self.response.write(result.content)
+
+        pic_dict = {"chosen_image": picture_url} #this maps the
+
+        self.response.write(template.render(pic_dict))
+
 
 class MemeTemp(webapp2.RequestHandler):
     def get(self):
@@ -112,7 +113,7 @@ class MemeTempRes(webapp2.RequestHandler):
         #self.response.write("my post handler = {x}<br>".format(x=meme_type))
         #self.response.write("first line: {y}<br>".format(y=self.request.get('user-first-ln')))
         #self.response.write("second line: {z}".format(z=self.request.get('user-second-ln')))
-        self.response.write(template.render(data_dict))
+        #self.response.write(template.render(data_dict))
         # self.response.write(template.render(capt_dict))
 
 
