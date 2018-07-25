@@ -34,6 +34,7 @@ import webapp2
 import os
 import jinja2
 import random
+from models import Movie, Person, Company
 
 
 def get_fortune():
@@ -67,8 +68,47 @@ class FortuneHandler(webapp2.RequestHandler):
         #astro_sign = request.form.get('user_astrological_sign')
         self.response.write(end_template.render(my_dict))
 
+class DataDemoHandler(webapp2.RequestHandler):
+    def get(self):
+        template = jinja_current_directory.get_template("templates/data_demo.html")
+        self.response.write(template.render())
 
+    def post(self):
+        title = self.request.get("movie_title")
+        runtime = self.request.get("runtime")
+        rating = self.request.get("rating")
+        my_movie = Movie(title=title,runtime=int(runtime),rating=float(rating))
+        my_movie.put()
+        self.get()
+
+class PersonDataDemoHandler(webapp2.RequestHandler):
+    def get(self):
+        template = jinja_current_directory.get_template("templates/data_demo.html")
+        self.response.write(template.render())
+
+    def post(self):
+        fname = self.request.get("fname")
+        lname = self.request.get("lname")
+        my_person = Person(fname=fname,lname=lname,occupation="blank",age=30)
+        my_person.put()
+        PersonResult.person_dict.append(my_person)
+        self.get()
+
+class PersonResult(webapp2.RequestHandler):
+    def post(self):
+        template = jinja_current_directory.get_template("templates/data_result.html")
+        person_dict = {}
+        self.response.write(template.render())
+
+class TestHandler(webapp2.RequestHandler):
+    def get(self):
+        test_movie = Movie(title="Example Movie", runtime=2,rating= 3.0)
+        test_movie.put()
 
 app = webapp2.WSGIApplication([
-    ('/', FortuneHandler)
+    ('/', FortuneHandler),
+    ('/data-demo', DataDemoHandler),
+    ('/person', PersonDataDemoHandler),
+    ('/result', PersonResult),
+    ('/test', TestHandler)
 ], debug=True)
