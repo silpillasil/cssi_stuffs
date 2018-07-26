@@ -48,17 +48,19 @@ template_env = jinja2.Environment(loader=template_loader)
 class Memes(webapp2.RequestHandler):
     def post(self): #changed from a get to a post to communicate w html file
 
-        try:
-            ssn1 = int(self.request.get('a'))
-            ssn2 = int(self.request.get('b'))
-            ssn3 = int(self.request.get('c'))
-        except:
-            self.response.write("Invalid social security number. Please go back, refresh, and try again.")
-            return
+    # making you give your SSN was funny but apparently I can't do it because legal issues damn
 
-        if not ((ssn1 >= 100 and ssn1 <= 999) and (ssn2 >= 00 and ssn2 <= 99) and (ssn3 >= 1000 and ssn3 <= 9999)):
-            self.response.write("Invalid social security number. Please go back, refresh, and try again.")
-            return
+        # try:
+        #     ssn1 = int(self.request.get('a'))
+        #     ssn2 = int(self.request.get('b'))
+        #     ssn3 = int(self.request.get('c'))
+        # except:
+        #     self.response.write("Invalid social security number. Please go back, refresh, and try again.")
+        #     return
+        #
+        # if not ((ssn1 >= 100 and ssn1 <= 999) and (ssn2 >= 00 and ssn2 <= 99) and (ssn3 >= 1000 and ssn3 <= 9999)):
+        #     self.response.write("Invalid social security number. Please go back, refresh, and try again.")
+        #     return
 
 
         url = 'https://api.imgflip.com/get_memes'
