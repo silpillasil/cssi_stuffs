@@ -47,10 +47,22 @@ template_env = jinja2.Environment(loader=template_loader)
 
 class Memes(webapp2.RequestHandler):
     def post(self): #changed from a get to a post to communicate w html file
+
+        try:
+            ssn1 = int(self.request.get('a'))
+            ssn2 = int(self.request.get('b'))
+            ssn3 = int(self.request.get('c'))
+        except:
+            self.response.write("Invalid social security number. Please go back, refresh, and try again.")
+            return
+
+        if not ((ssn1 >= 100 and ssn1 <= 999) and (ssn2 >= 00 and ssn2 <= 99) and (ssn3 >= 1000 and ssn3 <= 9999)):
+            self.response.write("Invalid social security number. Please go back, refresh, and try again.")
+            return
+
+
         url = 'https://api.imgflip.com/get_memes'
         self.response.headers['Content-Type'] = 'text/html'
-        random_captions = ['dank mems', 'yoooo', 'flusdhfusdfsyyds', 'blub blub']
-        x = random.choice(random_captions)
         template = template_env.get_template('templates/meme_result.html') #imports template
 
         try:
@@ -65,6 +77,7 @@ class Memes(webapp2.RequestHandler):
             logging.exception('Caught exception fetching url')
 
 #""" this stuff the api just told you to do vvv """
+
 
         caption_url = 'https://api.imgflip.com/caption_image'
         caption_dict = {'template_id': random_meme,
@@ -96,7 +109,6 @@ class Memes(webapp2.RequestHandler):
 
 class MemeTemp(webapp2.RequestHandler):
     def get(self):
-        self.response.write("how do I get to that file")
         template = template_env.get_template('templates/home.html')
         self.response.write(template.render())
 
@@ -128,7 +140,7 @@ class RecipeBrowser(webapp2.RequestHandler):
 app = webapp2.WSGIApplication([
     ('/memes', Memes),
     ('/recipe', RecipeBrowser),
-    ('/memetemp', MemeTemp),
+    ('/', MemeTemp),
     ('/meme_result', MemeTempRes)
     #('/save', SavePage),
     ], debug=True)
